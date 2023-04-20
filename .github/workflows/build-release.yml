@@ -1,0 +1,65 @@
+name: Test, Build, Draft Release
+on: workflow_call
+
+# This action is unused but demonstrates how a release binary can be automatically built and released.
+# Ideally only the Draft Release step should have write permissions as a separate job.
+# The build process should be more secure and verified.
+
+permissions:
+  contents: read
+
+jobs:
+  test-build-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
+        with:
+        # Fetch all history for all tags and branches
+        # Needed for getting git rev-list for versioning
+          fetch-depth: 0
+
+      - name: Get java
+        uses: actions/setup-java@91d3aa4956ec4a53e477c4907347b5e3481be8c9 # v2.5.1
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@fa522696baadfef7de0fe810135f446221e665c2 # 3.7
+        with:
+          cli: 1.10.3.1075 # Clojure CLI based on tools.deps
+
+      - name: Run Unit tests & abort action if tests fail
+        run: clojure -X:test
+        
+      - name: Build Clojure project and output version
+        id: build
+        run: echo "::set-output name=version::$(clojure -T:build uber)"
+
+      - name: Check output
+        run: echo ${{ steps.build.outputs.version }}
+        
+      - name: Draft release
+        id: draft_release
+        uses: release-drafter/release-drafter@6df64e4ba4842c203c604c1f45246c5863410adb # v5.21.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          config-name: release-draft-template.yml
+          prerelease: false
+          name: Octatrack Bank Manager v${{ needs.test.outputs.version }}
+          tag: v${{ needs.test.outputs.version }}
+
+      - name: Upload artifact to release draft
+        id: upload_release_artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.draft_release.outputs.upload_url }}
+          asset_path: target/uberjar/otbanks.jar
+          asset_name: otbanks.jar
+          asset_content_type: application/java-archive
