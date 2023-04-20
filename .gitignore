@@ -1,0 +1,30 @@
+.*/
+/target
+/classes
+/checkouts
+profiles.clj
+pom.xml
+pom.xml.asc
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+/.prepl-port
+.hgignore
+.hg/
+.DS_Store
+
+# Config files
+*.config
+
+# Log files
+*.txt
+
+# Default folders used for data & testing
+otbanks-logs
+/projects/
+/project folders/
+/test/data/
+
+# Exceptions
+!.github

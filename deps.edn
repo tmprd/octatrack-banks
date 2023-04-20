@@ -1,0 +1,30 @@
+{:name "Octatrack Bank Manager"
+ :version "1.0"
+ :paths ["src"]
+
+ :deps {org.clojure/clojure {:mvn/version "1.10.1"}
+        org.clojure/tools.cli {:mvn/version "1.0.214"}
+        org.clojure/tools.logging {:mvn/version "1.2.4"}}
+
+ :aliases {;; Build with clj -T:build <function-in-build>. Start REPL with this one if evaluating build.clj
+           :build {:deps {io.github.clojure/tools.build {:git/tag "v0.8.3" :git/sha "0d20256"}}
+                   :ns-default build}
+
+           ;; Test with clj -M:test
+           :test {:extra-paths ["test"]
+                  :extra-deps {io.github.cognitect-labs/test-runner
+                               {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+                  :main-opts ["-m" "cognitect.test-runner"]
+                  :exec-fn cognitect.test-runner.api/test
+                  :nses ["octatrack.test"]}
+
+           ;; Run with clj -M:dev 
+           :dev {:main-opts ["-m" "octatrack.application.console"]}
+
+           ;; Create an image of the dependency graph with clj -X:hiera :cluster-depth 3 :layout :horizontal :output "docs"
+           :deps-graph
+           {:deps {io.github.greglook/clj-hiera {:git/tag "2.0.0", :git/sha "b14e514"}}
+            :exec-fn hiera.main/graph
+            :exec-args {}}}}
+
+

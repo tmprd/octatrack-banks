@@ -1,0 +1,2 @@
+;; This points Babashaka's dependency resolution to deps.edn
+{:deps {local/deps {:local/root "."}}}
