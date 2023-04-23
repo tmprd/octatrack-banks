@@ -4,14 +4,16 @@
 * Copies and renames Octatrack banks from a specified project folder to a new project folder
 * This independently developed software has no affiliation with Elektron Music Machines
 
+**⚠️ Disclaimer: Use this tool only on *copies* of your project folders. Do not use this directly with your Octatrack. Always keep backups!**
+
 # ⚙️ Setup
 Requirements: Octatrack projects and Java.
-1. Copy some Octatrack project folder(s) to your machine.
+1. Copy some Octatrack project folder(s) to your computer.
 2. Install [Java](https://www.java.com/en/download/) if you don't have it.
 3. Download Octatrack Bank Manager [here](https://github.com/tmprd/octatrack-banks/releases/latest)!
 
 # 💻 Usage
-Run this program with two inputs (see [example](#-example) below):
+Run this tool with two inputs (see [example](#-example) below):
 
 1. The name or path of the source project folder you want to copy banks from specified with the command-line argument `--source` or `-s`. This folder should contain 16 bank files.
 
